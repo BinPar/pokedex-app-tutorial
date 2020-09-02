@@ -1,9 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import DownloadPokemons from './components/DownloadPokemons';
+import { StatusBar } from 'expo-status-bar';
+import styled from 'styled-components/native';
+
+
+const Container = styled.View`
+  flex: 1;
+  background-color: #336;
+  align-items: center;
+  justify-content: center;
+`;
 
 const app = (): JSX.Element => (
-  <DownloadPokemons />
+  <Container>
+    <DownloadPokemons />
+    <StatusBar style="auto" />
+  </Container>
 );
 
 export default app;

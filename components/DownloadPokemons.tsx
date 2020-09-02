@@ -1,15 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
 import { View, StyleProp, ViewStyle } from 'react-native';
-import { DownloadStatus } from '../model';
+import usePokemonDownloader from '../hooks/usePokemonDownloader';
 
-const Container = styled.View`
-  flex: 1;
-  background-color: #336;
-  align-items: center;
-  justify-content: center;
-`;
+
 
 const Title = styled.Text`
   color: #ff4;
@@ -33,28 +27,7 @@ const Progress = styled.View`
 `;
 
 const DownloadPokemon = (): JSX.Element => {
-  const [downloadStatus, setDownloadStatus] = useState<DownloadStatus>({
-    downloaded: 0,
-    total: 1000,
-    percent: 0,
-  });
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDownloadStatus((current) => {
-        const newValue = { ...current };
-        if (newValue.downloaded < newValue.total) {
-          newValue.downloaded += 100;
-          newValue.percent = Math.floor((newValue.downloaded / newValue.total) * 100);
-        } else {
-          clearInterval(interval);
-        }
-        return newValue;
-      });
-    }, 100);
-    return (): void => {
-      clearInterval(interval);
-    };
-  }, []);
+  const downloadStatus = usePokemonDownloader();
 
   const progressStyle: StyleProp<ViewStyle> = {
     width: `${downloadStatus.percent}%`,
@@ -64,14 +37,13 @@ const DownloadPokemon = (): JSX.Element => {
   };
 
   return (
-    <Container>
+    <>
       <Title>POKEDEX</Title>
       <Body>{`Descargando ${downloadStatus.downloaded} de ${downloadStatus.total}`}</Body>
       <Progress>
         <View style={progressStyle} />
       </Progress>
-      <StatusBar style="auto" />
-    </Container>
+    </>
   );
 };
 

@@ -3,3 +3,11 @@ export interface DownloadStatus {
   total: number;
   percent: number;
 }
+
+export interface PokemonListAPIResult {
+  count: number;
+  results: {
+    url: string;
+    name: string;
+  }[];
+}
