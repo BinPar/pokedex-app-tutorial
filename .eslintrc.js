@@ -12,12 +12,12 @@ module.exports = {
     'airbnb',
     'airbnb-base',
     'eslint:recommended',
+    'plugin:react/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier',
     'prettier/@typescript-eslint',
-    'plugin:react/recommended',
   ],
   settings: {
     react: {

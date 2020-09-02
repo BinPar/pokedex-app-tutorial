@@ -7,9 +7,10 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "eslint \"**/*.ts*\" --ignore-pattern node_modules/",
+    "lint": "eslint \"**/*.ts*\"",
     "test": "jest",
-    "test-dev": "jest --watch"
+    "test-dev": "jest --watch",
+    "prettify": "prettier --check --write ."
   },
   "dependencies": {
     "expo": "~38.0.8",

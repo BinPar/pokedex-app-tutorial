@@ -10,10 +10,10 @@ Pokedex App tutorial using:
 
 ## Previous Requirements
 
-- node 12 *(nvm recommended)*
+- node 12 _(nvm recommended)_
 - npm 6
-- expo-cli *(you can install it using `npm install --global expo-cli`)*
-- x-code *(installed & updated, if you want to use the iOS emulator)*
-- Android studio installed *(for Android emulation)*
+- expo-cli _(you can install it using `npm install --global expo-cli`)_
+- x-code _(installed & updated, if you want to use the iOS emulator)_
+- Android studio installed _(for Android emulation)_
 
 > **Note**: To end the x-code install you will need to open it after the update
