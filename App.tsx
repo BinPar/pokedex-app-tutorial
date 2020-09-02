@@ -1,8 +1,9 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import { Text, View, Image } from 'react-native';
 import styled from 'styled-components/native';
-import { View, StyleProp, ViewStyle } from 'react-native';
-import { DownloadStatus } from './model';
+import DownloadPokemons from './components/DownloadPokemons';
+import useLocalInfo from './hooks/useLocalInfo';
 
 const Container = styled.View`
   flex: 1;
@@ -11,69 +12,32 @@ const Container = styled.View`
   justify-content: center;
 `;
 
-const Title = styled.Text`
-  color: #fff;
-  font-weight: 900;
-  font-size: 20px;
-`;
-
-const Body = styled.Text`
-  color: #fff;
-  font-size: 12px;
-  margin: 15px;
-`;
-
-const Progress = styled.View`
-  background-color: #123;
-  width: 80%;
-  height: 10px;
-  border-radius: 10px;
-  border: 1px solid white;
-  padding: 2px;
-`;
-
 const app = (): JSX.Element => {
-  const [downloadStatus, setDownloadStatus] = useState<DownloadStatus>({
-    downloaded: 0,
-    total: 1000,
-    percent: 10,
-  });
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDownloadStatus((current) => {
-        const newValue = { ...current };
-
-        if (newValue.downloaded < newValue.total) {
-          newValue.downloaded += 100;
-          newValue.percent = Math.floor((newValue.downloaded / newValue.total) * 100);
-        } else {
-          clearInterval(interval);
-        }
-
-        return newValue;
-      });
-    }, 100);
-
-    return (): void => {
-      clearInterval(interval);
-    };
-  }, []);
-
-  const progressStyle: StyleProp<ViewStyle> = {
-    width: `${downloadStatus.percent}%`,
-    height: 4,
-    backgroundColor: '#fe7',
-    borderRadius: 4,
-  };
-
+  const pokemonData = useLocalInfo();
+  let content = <Text>Loading</Text>;
+  if (pokemonData) {
+    if (pokemonData.length === 0) {
+      content = <DownloadPokemons />;
+    } else {
+      content = (
+        <View>
+          <Text>{pokemonData[0].name}</Text>
+          <Image
+            style={{
+              width: 200,
+              height: 200,
+            }}
+            source={{
+              uri: pokemonData[0].imageLocalURI,
+            }}
+          />
+        </View>
+      );
+    }
+  }
   return (
     <Container>
-      <Title>POKEDEX</Title>
-      <Body>{`Descargando ${downloadStatus.downloaded} de ${downloadStatus.total}`}</Body>
-      <Progress>
-        <View style={progressStyle} />
-      </Progress>
+      {content}
       <StatusBar style="auto" />
     </Container>
   );
