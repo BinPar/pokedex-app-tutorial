@@ -21,18 +21,20 @@ interface BasicPokemonInfo {
 
 export interface PokemonDataAPI extends BasicPokemonInfo {
   sprites: {
+    // eslint-disable-next-line camelcase
     front_default: string;
   };
   stats: {
+    // eslint-disable-next-line camelcase
     base_stat: number;
     stat: {
       name: string;
-    }
+    };
   }[];
   types: {
     type: {
       name: string;
-    }
+    };
   }[];
 }
 
@@ -40,5 +42,5 @@ export interface PokemonData extends BasicPokemonInfo {
   imageURL: string;
   imageLocalURI: string;
   types: string[];
-  stats:  { [name: string] : number; }
+  stats:  { [name: string]: number };
 }
