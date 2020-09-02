@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
-import { DownloadStatus, PokemonListAPIResult, PokemonDataAPI } from '../model';
+import { DownloadStatus, PokemonListAPIResult, PokemonDataAPI, PokemonData } from '../model';
 import settings from '../settings';
 
 const usePokemonDownloader = (): DownloadStatus => {
@@ -18,7 +18,6 @@ const usePokemonDownloader = (): DownloadStatus => {
     );
     const { data } = result;
     const basePath = `${FileSystem.documentDirectory || ''}images`;
-    console.log(basePath);
 
     try {
       await FileSystem.deleteAsync(basePath);
@@ -28,10 +27,12 @@ const usePokemonDownloader = (): DownloadStatus => {
     }
     await FileSystem.makeDirectoryAsync(basePath);
 
+    const pokemonInfo = new Array<PokemonData>();
+
     if (data) {
       setDownloadStatus((current) => ({ ...current, total: data.count }));
-      for (let i = 0; i <= data.results.length; i++) {
-        const item = data.results[i];        
+      for (let i = 0; i < data.results.length; i++) {
+        const item = data.results[i];
         const pokemonResult = await axios.get<PokemonDataAPI>(item.url);
         const pokemonData = pokemonResult.data;
         setDownloadStatus((current) => ({
@@ -41,19 +42,36 @@ const usePokemonDownloader = (): DownloadStatus => {
         }));
         const imageURL = pokemonData.sprites.front_default;
         if (imageURL) {
-          console.log(imageURL);
           const downloadImage = FileSystem.createDownloadResumable(
             imageURL,
             `${basePath}/${pokemonData.id}.png`,
           );
           const imageDownloadResult = await downloadImage.downloadAsync();
 
+          const stats = pokemonData.stats.reduce<{ [name: string]: number }>(
+            (current, stat) => ({
+              ...current,
+              [stat.stat.name]: stat.base_stat,
+            }),
+            {},
+          );
+
           if (imageDownloadResult) {
             const imageLocalURI = imageDownloadResult.uri;
-            console.log(imageLocalURI);
+            pokemonInfo.push({
+              id: pokemonData.id,
+              name: pokemonData.name,
+              height: pokemonData.height,
+              weight: pokemonData.weight,
+              imageURL,
+              imageLocalURI,
+              types: pokemonData.types.map((typeNode) => typeNode.type.name),
+              stats,
+            });
           }
         }
       }
+      await FileSystem.writeAsStringAsync(`${FileSystem.documentDirectory || ''}pokemonInfo.json`, JSON.stringify(pokemonInfo));      
     }
   };
   useEffect(() => {
